@@ -95,12 +95,39 @@ int main ()
 }
 ```
 不同于push_back，emplace_back会使用传入的元素构造对象，而不是先创建临时对象。
+##### 3. 动态扩容
+- 从空间角度：扩容因子越大，预留的空间越大，浪费的空间就越多。
+- 从时间角度：扩容因子越小，扩容的次数就越多，时间开销就越大。
+- 假设扩容因子为2，每次扩容情况为：1,2,4,8,16,32……。当我们释放了4的空间，然后寻找8的新空间，再次扩容，释放8，寻找16的空间。显然1+2+4+8=15<16，也就是上次释放的空间永远也不能被下一次扩容利用，这对内存非常不友好，比如造成内存碎片等问题。而当k=1.5时则可以避免这种情况。理论上最佳扩容因子为黄金分割率，即1.618.
 #### list
+- 双向链表
+- 插入、删除快，随机访问性能差
+- 适用于频繁插入和删除，但随机访问少
+- 删除某个迭代器后其他迭代器不受影响
 
-#### queue
+#### Queue，deque&priority_queue
+- queue是队列，通过循环数组实现，注意获取队首元素是通过front函数。显示队尾使用back函数。
+- deque是双向队列。是可以在两端扩展和收缩的连续容器。Deque容器使用分段数组来存放数据，将每一段的连续空间的首地址存放在索引表中，当头部或者尾部的数组空间满时，就会重新分配一个数组，然后在索引表的头部或尾部添加新的数组首地址。deque的操作有push_front和push_back。back和front分别用来获取队尾和队首元素。
+![deque存储模型](deque.PNG "deque存储模型")
+- priority_queue是基于堆实现。定义priority_queue<type, container, func>。分别传入关键字类型，存放数据的容器和比较函数。当使用基本数据类型时，只需要传入数据类型即可，默认为大根堆。获取队首元素使用top函数。操作有push和pop。
+
+#### pair&tuple
+- pair是将2个数据组合成一个数据。他可以作为map的元素。使用first和second可以获取这两个元素值。make_pair函数可以定义一个pair类型变量。如make_pair(1, 1)。也可直接使用pair<int, int> p(1, 1)。
+- tuple可以将多个数据组合成一个数据。比如auto t = make_tuple(1, “2”, 1.1, ‘3’);以通过get来获取每个位置的值。如get<0>(t)的值就是1。还可以基于类型，但保证类型唯一，如get<char>(t)的值就是’3’。
 
 #### map & set
 ##### 1. key_compare & value_comp
+- key_compare：比较器类型。
+```
+map<int, int> my_map;
+map<int, int>::key_compare my_comp = my_map.key_comp();
+my_comp(1, 2); // 返回true
+```
+- value_comp：返回比较器对象，参数时pair对象
+```
+std::map<char,int> mymap;
+mymap.value_comp()(*mymap.begin(), *mymap.rbegin()); // 返回ture
+```
 
 ##### 2. emplace & emplace_hint
 ```
@@ -112,12 +139,11 @@ ret2 = my_map.emplace_hint(my_map.end(), 1, "abc");
 // first为被插入元素的迭代器，second为插入是否成功（key已存在，则插入失败）
 ```
 ##### 3. lower_bound & upper_bound
+- lower_bound(k)，返回第一个不在k之后的迭代器，即<=k的第一个key
+- upper_bound(k)，返回第一个在k之后的迭代器，即>k的第一key
 
 #### unordered_map & unordered_set
-
-#### array
-
-#### priority_queue
+- 底层实现为哈希表，所以查询和插入是常数开销，但是当数据量很大时，可能会产生很多冲突，致使性能降低。需要解决冲突。
 
 ### 类
 #### 权限
