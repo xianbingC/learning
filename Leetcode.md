@@ -49,6 +49,14 @@
 // 遍历结束可能会出现股票还未卖出的情形，即当前买卖最大利润大于0，需注意。
 ```
 
+#### 6.买卖股票的最佳时机III
+```
+buy1 = max(buy1, -prices[i])
+sell1 = max(sell1, buy1 + prices[i])
+buy2 = max(buy2, sell1 - prices[i])
+sell2 = max(sell2, buy2 + prices[i])
+```
+
 ### DFS&BFS
 #### 1.复原IP地址
 有效 IP 地址 正好由四个整数（每个整数位于 0 到 255 之间组成，且不能含有前导 0），整数之间用 '.' 分隔。
