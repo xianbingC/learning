@@ -72,10 +72,28 @@ for i in n - 1 .. 0:
 // dp[i][j]表示s从i到末尾与t从j到末尾的匹配次数
 ```
 
-#### 三角形最小路径和
+#### 8.三角形最小路径和
 给定一个三角形 triangle ，找出自顶向下的最小路径和。
 
 每一步只能移动到下一行中相邻的结点上。相邻的结点 在这里指的是 下标 与 上一层结点下标 相同或者等于 上一层结点下标 + 1 的两个结点。也就是说，如果正位于当前行的下标 i ，那么下一步可以移动到下一行的下标 i 或 i + 1 。
+
+#### 9.最长连续序列
+给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
+
+请你设计并实现时间复杂度为 O(n) 的算法解决此问题。
+```
+// （1）哈希set记录下每个元素；
+// （2）遍历数组，对于当前元素num，在set中如果num-1存在或者num不存在，就跳过；
+// （3）否则，就进行如下操作：
+tmp = 1
+m = num
+while (set.conut(++m)) {
+  ++tmp
+}
+max_ret=max(tmp, max_ret)
+set.erase(num) // 已经处理过，移出set，否则最差复杂度为O（n*n）
+// （4）返回到（2）。
+```
 
 ### DFS&BFS
 #### 1.复原IP地址
@@ -91,6 +109,23 @@ DFS(s, ret, path, cur) {
   if (cur < s.size() + 1 && s[cur] != '0')...
   if (cur < s.size() + 2 && s[cur ... cur + 2] <= 255 && s[cur] != '0')...
 }
+```
+
+#### 2.被围绕的区域
+给你一个 m x n 的矩阵 board ，由若干字符 'X' 和 'O' ，找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
+
+```
+// 遍历四条边的存在O的位置，然后如下进行回溯：
+DFS(board, x, y):
+    if x isinvalid or y isinvalid or board[x][y] in {'X','#'}:
+        return
+    board[x][y] = '#'
+    DFS(board, x + 1, y)
+    DFS(board, x - 1, y)
+    DFS(board, x, y - 1)
+    DFS(board, x, y + 1)
+// 将所有连通边缘的O标记为#
+// 遍历board，将所有的O标记为X，将所有#标记为O，结束
 ```
 
 ### 二叉树
@@ -326,6 +361,27 @@ def func(root):
   root->left = NULL
   return root
 
+```
+#### 20.求根节点到叶节点数字之和
+给你一个二叉树的根节点 root ，树中每个节点都存放有一个 0 到 9 之间的数字。
+每条从根节点到叶节点的路径都代表一个数字：
+
+例如，从根节点到叶节点的路径 1 -> 2 -> 3 表示数字 123 。
+计算从根节点到叶节点生成的 所有数字之和 。
+
+```
+// 深度优先遍历，如果是叶子结点：
+func(root, cur_sum, sum):
+    if root == NULL:
+        return
+    cur_sum = root->val + cur_sum * 10;
+    if root->left == NULL && root->right == NULL:
+        sum += cur_sum
+        return
+    func(root->left, cur_sum, sum)
+    func(root->right, cur_sum, sum)
+
+func(root, 0, sum)
 ```
 
 ### 链表
