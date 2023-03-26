@@ -122,10 +122,20 @@ int main ()
 - priority_queue是基于堆实现。定义priority_queue<type, container, func>。分别传入关键字类型，存放数据的容器和比较函数。当使用基本数据类型时，只需要传入数据类型即可，默认为大根堆。获取队首元素使用top函数。操作有push和pop。
 
 #### pair&tuple
-- pair是将2个数据组合成一个数据。他可以作为map的元素。使用first和second可以获取这两个元素值。make_pair函数可以定义一个pair类型变量。如make_pair(1, 1)。也可直接使用pair<int, int> p(1, 1)。
+- pair是将2个数据组合成一个数据。他可以作为map的元素。使用first和second可以获取这两个元素值。make_pair函数可以定义一个pair类型变量。如make_pair(1, 1)。也可直接使用pair<int, int> p(1, 1)。map、unordered_map中的元素就可以通过pair的形式来获取。
 - tuple可以将多个数据组合成一个数据。比如auto t = make_tuple(1, “2”, 1.1, ‘3’);以通过get来获取每个位置的值。如get<0>(t)的值就是1。还可以基于类型，但保证类型唯一，如get<char>(t)的值就是’3’。
 
 #### map & set
+##### 0. RB-Tree
+- 与AVL树不同的是，AVL树满足任意节点的两个子树的高度差不大于1，而红黑树最长路径不超过最短路径的2倍，所以是近似平衡的二叉搜索树。
+- 由于AVL树的平衡性过于严苛，为了保证平衡性，需要做旋转操作，所以频繁地插入开销比较大，而红黑树既满足log(n)的查找复杂度，又减少了频繁插入带来的计算开销。
+- 红黑树的五个特性
+    - 节点是红色或者是黑色
+    - 根节点是黑色
+    - 每个叶节点（NIL或空节点）是黑色
+    - 不存在两个连续的红色节点
+    - 从任一节点到其没个叶节点的所有路径都包含相同数目的黑色节点
+    - [红黑树参考](https://blog.csdn.net/Y0Q2T57s/article/details/111601963)
 ##### 1. key_compare & value_comp
 - key_compare：比较器类型。
 ```
@@ -218,7 +228,49 @@ ret2 = my_map.emplace_hint(my_map.end(), 1, "abc");
 
 #### 单继承、多继承
 - 继承父类的成员与方法，但private权限对子类不可见
-- 菱形继承问题：TODO
+- 菱形继承问题
+```C++
+class A {
+public:
+    int x;
+    int y;
+};
+class B: public A {
+public:
+    int t;
+};
+class C: public A {
+public:
+    int s;
+};
+class D: public B, public C {
+public:
+    int z;
+};
+```
+上述继承关系就是菱形继承，其中B和C分别继承了A，那么x和y在B和C中各有一份，当D再继承B和C是，对于D的对象而言，它存储了两份x和y，在使用上既造成了空间浪费，又造成了歧义。通过虚继承的方式可以解决这种问题。
+```C++
+class A {
+public:
+    int x;
+    int y;
+};
+class B: virtual public A {
+public:
+    int t;
+};
+class C: virtual public A {
+public:
+    int s;
+};
+class D: public B, public C {
+public:
+    int z;
+};
+```
+上述通过虚继承的情况下，D对象中，B和C的成分存放的不再是基类的成员而是一个指向虚基表的指针，虚基表中存放的是指针相对基类成员的偏移量。如下图所示：\
+![虚继承](虚继承.png "虚继承")
+
 
 #### 对象模型
 
