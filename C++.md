@@ -332,3 +332,60 @@ void func(T&& param){
 
 - 动态内存在堆区申请，通过new、new[]或malloc申请、由delete、delete[]或free释放
 - 局部变量的内存由内核管理，在栈区进行
+
+### C++14新特性
+#### 定义模版变量
+```C++
+template<class T>
+constexpr T pi = T(3.1415926535897932385L); // variable template
+int main()
+{
+    std::cout << pi<double> << std::endl;
+    std::cout << pi<float> << std::endl;
+    std::cout << pi<int> << std::endl;
+    return 0;
+}
+```
+
+#### lambda表达式的改动
+- 支持泛型参数
+- 支持初始化捕获
+```C++
+auto func = [x = 3](auto y) {return x + y; };
+```
+
+#### constexpr限制放宽
+- c++11中修饰函数，函数只能有一个返回值，而在14中，可以有多个，可以使用for、if等语句
+
+#### 函数返回值推导
+- c++14新增了函数返回值的推导，当返回值声明为auto时，编译器会根据你的return语句推导出你的返回值类型。
+
+#### [[deprecated]]标记
+- 加在要废弃的接口之前，编译时会提示该接口即将废弃。
+
+### C++17新特性
+- auto x { 1 }这种只包含一个value的，现在将被推断为int，但之前它是一个初始化列表。
+- 通过[=,*this]按值捕获this所指向的对象。
+- 嵌套命名空间定义，namespace A::B::C{}
+- 折叠表达式
+```C++
+template<typename... Args>
+auto SumWithOne(Args... args){
+    return (1 + ... + args);
+}
+```
+- C++的if和switch语句的新版本：
+```C++
+if (auto val = GetValue(); condition(val))
+    // on success
+else
+    // on false...
+```
+如此声明，val只针对if和else可见，但如果在外部声明，val的作用域更广，如果condition操作对val做了释放操作，那么在其他地方再使用val就会出现异常。
+- constexpr if语句，允许在编译时根据常量表达式条件丢弃 if 语句的分支。
+```C++
+if constexpr(cond)
+     statement1; // Discarded if cond is false
+else
+     statement2; // Discarded if cond is true
+```
