@@ -79,7 +79,7 @@ Int main() {
 4. 线程控制原语
     - pthread_create函数
 	     - 创建一个新线程，传入参数为线程id，线程属性和线程处理函数以及处理函数的参数。
-       ```
+       ```C
 	     Pthread_create(pthread_t *thread, const pthread_attr_t* attr, void*(*func)(void*), void* arg)
        // 上述函数成功返回0，失败返回错误号。可用strerror来打印。
        // 创建线程的时候参数最好使用值传递。
@@ -92,6 +92,7 @@ Int main() {
 	    - 设置线程分离。
     - 线程属性设置
 	    - Pthread_attr_t结构体主要成员：1.线程分离状态；2.线程栈大小；3.线程栈警戒缓冲区大小。通过pthread_attr_setdetachstate和pthread_attr_setstacksize等函数实现属性设置，不能直接设置。
+
 ### 并行与并发
 
 ### 用户线程与内核线程
