@@ -92,6 +92,9 @@ Int main() {
 	    - 设置线程分离。
     - 线程属性设置
 	    - Pthread_attr_t结构体主要成员：1.线程分离状态；2.线程栈大小；3.线程栈警戒缓冲区大小。通过pthread_attr_setdetachstate和pthread_attr_setstacksize等函数实现属性设置，不能直接设置。
+- **线程同步**：TODO
+- **死锁**：TODO
+- **CAS**：TODO
 
 ### 并行与并发
 
